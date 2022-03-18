@@ -5,8 +5,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import io.netty.util.internal.StringUtil;
-import org.apache.commons.lang.StringUtils;
 import org.jeecg.common.constant.CacheConstant;
 import org.jeecg.common.constant.CommonConstant;
 import org.jeecg.common.constant.FillRuleConstant;
@@ -23,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -172,7 +171,7 @@ public class SysDepartServiceImpl extends ServiceImpl<SysDepartMapper, SysDepart
 				// 定义部门类型
 				String orgType = "";
 				// 如果是最高级,则查询出同级的org_code, 调用工具类生成编码并返回
-				if (StringUtil.isNullOrEmpty(parentId)) {
+				if (StringUtils.isEmpty(parentId)) {
 					// 线判断数据库中的表是否为空,空则直接返回初始编码
 					query1.eq(SysDepart::getParentId, "").or().isNull(SysDepart::getParentId);
 					query1.orderByDesc(SysDepart::getOrgCode);
@@ -304,9 +303,9 @@ public class SysDepartServiceImpl extends ServiceImpl<SysDepartMapper, SysDepart
 		LambdaQueryWrapper<SysDepart> query = new LambdaQueryWrapper<SysDepart>();
 		List<SysDepartTreeModel> newList = new ArrayList<>();
 		//myDeptSearch不为空时为我的部门搜索，只搜索所负责部门
-		if(!StringUtil.isNullOrEmpty(myDeptSearch)){
+		if(!StringUtils.isEmpty(myDeptSearch)){
 			//departIds 为空普通用户或没有管理部门
-			if(StringUtil.isNullOrEmpty(departIds)){
+			if(StringUtils.isEmpty(departIds)){
 				return newList;
 			}
 			//根据部门id获取所负责部门
@@ -477,7 +476,7 @@ public class SysDepartServiceImpl extends ServiceImpl<SysDepartMapper, SysDepart
         // 调用wrapTreeDataToTreeList方法生成树状数据
         List<SysDepartTreeModel> listResult = FindsDepartsChildrenUtil.wrapTreeDataToTreeList(list);
         List<SysDepartTreeModel> treelist =new ArrayList<>();
-        if(StringUtils.isNotBlank(keyWord)){
+        if(StringUtils.hasLength(keyWord)){
             this.getTreeByKeyWord(keyWord,listResult,treelist);
         }else{
             return listResult;

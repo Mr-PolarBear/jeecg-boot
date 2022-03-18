@@ -1,6 +1,7 @@
 package org.jeecg.common.util;
 
-import io.netty.util.internal.StringUtil;
+
+import org.springframework.util.StringUtils;
 
 /**
  * 流水号生成规则(按默认规则递增，数字从1-99开始递增，数字到99，递增字母;位数不够增加位数)
@@ -152,7 +153,7 @@ public class YouBianCodeUtil {
 		return Integer.parseInt(max_num);
 	}
 	public static String[] cutYouBianCode(String code){
-		if(code==null || StringUtil.isNullOrEmpty(code)){
+		if(code==null || StringUtils.isEmpty(code)){
 			return null;
 		}else{
 			//获取标准长度为numLength+1,截取的数量为code.length/numLength+1
